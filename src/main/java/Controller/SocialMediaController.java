@@ -1,5 +1,8 @@
 package Controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Model.Account;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -50,11 +53,26 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void registerHandler(Context context) {
-        context.json("sample text");
+        // ObjectMapper mapper = new ObjectMapper();
+        // Account user = mapper.readValue(context.body(), Account.class);
+        // Account newUser = accountService.addUser(user);
+        // if(newUser!=null){
+        //     context.json(mapper.writeValueAsString(newUser));
+        // }else{
+        //     context.status(400);
+        // }
+
     }
 
     private void loginHandler(Context context) {
-        context.json("sample text");
+        // ObjectMapper mapper = new ObjectMapper();
+        // Account user = mapper.readValue(context.body(), Account.class);
+        // Account loginUser = accountService.loginUser(user);
+        // if(loginUser!=null){
+        //     context.json(mapper.writeValueAsString(newUser));
+        // }else{
+        //     context.status(400);
+        // }
     }
 
     private void getAllMessagesHandler(Context context) {
