@@ -16,8 +16,13 @@ public class SocialMediaController {
      */
 
     // future service objects
-    // AccountService accountService = new AccountService();
-    // MessageService messageService = new MessageService();
+    // AccountService accountService;
+    // MessageService messageService;
+
+    public SocialMediaController(){
+        // accountService = new AccountService();
+        // messageService = new MessageService();
+    }
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
@@ -37,7 +42,6 @@ public class SocialMediaController {
         app.patch("/messages{message_id}", this::updateMessageByIdHandler);
         app.get("/accounts/{account_id}/messages", this::getMessagesByAccountIDHandler);
 
-        // app.start(8080);
         return app;
     }
 
