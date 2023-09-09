@@ -3,6 +3,7 @@ package Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -65,38 +66,58 @@ public class SocialMediaController {
     }
 
     private void loginHandler(Context context) {
-        // ObjectMapper mapper = new ObjectMapper();
-        // Account user = mapper.readValue(context.body(), Account.class);
+        // Account user = new Account(context.body());
         // Account loginUser = accountService.loginUser(user);
-        // if(loginUser!=null){
-        //     context.json(mapper.writeValueAsString(newUser));
+        // if(loginUser){
+        //     context.status(200);
         // }else{
         //     context.status(400);
         // }
     }
 
     private void getAllMessagesHandler(Context context) {
-        context.json("sample text");
+        // List<Messages> messages = messageService.getAllMessages()
+        // context.json(messages);
     }
 
     private void addMessageHandler(Context context) {
-        context.json("sample text");
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+        Message newMessage = messageService.addMessage(context.body(), Message.class);
+        if (newMessage != null){
+            context.json(newMessage);
+        } else {
+            context.status(400);
+        };
     }
 
     private void getMessageByIdHandler(Context context) {
-        context.json("sample text");
+        // Message message = messageService.getMessageById(context.pathParam("message_id"));
+        // context.json(message);
     }
 
     private void deleteMessageByIdHandler(Context context) {
-        context.json("sample text");
+        // if (messageService.getMessageById(context.pathParam("message_id"))!=null){
+        //     messageService.deleteById(context.pathParam("message_id"));
+        //     context.status(200);
+        // } else {
+            // context.result();
+        // }
     }    
 
     private void updateMessageByIdHandler(Context context) {
-        context.json("sample text");
+        // if (messageService.getMessageById(context.pathParam("message_id"))!=null){
+                // int id = context.pathParam("message_id");
+        //     messageService.updateMessage(id);
+        //     context.json(messageService.getMessageById(id));
+        // } else {
+        //     context.status(400);
+        // }
     }  
 
     private void getMessagesByAccountIDHandler(Context context) {
-        context.json("sample text");
+        // List<Messages> messages = messageService.getMessagesByAccountID();
+        // context.json(messages);
     }  
 
 }
