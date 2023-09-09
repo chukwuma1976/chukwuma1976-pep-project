@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
 import Model.Message;
+import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -20,17 +22,16 @@ public class SocialMediaController {
      */
 
     // future service objects
-    // AccountService accountService;
-    // MessageService messageService;
+    AccountService accountService;
+    MessageService messageService;
 
     public SocialMediaController(){
-        // accountService = new AccountService();
-        // messageService = new MessageService();
+        accountService = new AccountService();
+        messageService = new MessageService();
     }
 
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        // app.get("example-endpoint", this::exampleHandler);
 
         //user registration controller route
         app.post("/register", this::registerHandler);
@@ -81,14 +82,14 @@ public class SocialMediaController {
     }
 
     private void addMessageHandler(Context context) {
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(context.body(), Message.class);
-        Message newMessage = messageService.addMessage(context.body(), Message.class);
-        if (newMessage != null){
-            context.json(newMessage);
-        } else {
-            context.status(400);
-        };
+        // ObjectMapper mapper = new ObjectMapper();
+        // Message message = mapper.readValue(context.body(), Message.class);
+        // Message newMessage = messageService.addMessage(context.body(), Message.class);
+        // if (newMessage != null){
+        //     context.json(newMessage);
+        // } else {
+        //     context.status(400);
+        // };
     }
 
     private void getMessageByIdHandler(Context context) {
