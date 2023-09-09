@@ -42,7 +42,7 @@ public class MessageDAO {
             int message_id = rs.getInt("message_id");
             int posted_by = rs.getInt("posted_by");
             String message_text = rs.getString("message_text");
-            long time_posted_epoch = rs.getInt("time_posted_epoch");
+            long time_posted_epoch = rs.getLong("time_posted_epoch");
 
             newMessage = new Message(message_id, posted_by, message_text, time_posted_epoch);
 
