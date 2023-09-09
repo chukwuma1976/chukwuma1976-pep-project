@@ -12,7 +12,10 @@ public class AccountService {
     }
 
     public Account addUser(Account user) {
-        return accountDAO.addUser(user);
+        if (user.getPassword().length() >= 4 && user.getUsername() !=""){
+            return accountDAO.addUser(user);
+        }
+        return null;
     }
 
     public Account loginUser(Account user) {

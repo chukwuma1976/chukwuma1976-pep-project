@@ -33,18 +33,23 @@ public class MessageDAO {
         Message newMessage = null;
         try {
             String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch) VALUES(?,?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, message.getPosted_by());
             ps.setString(2, message.getMessage_text());
             ps.setLong(3, message.getTime_posted_epoch());
-            ResultSet rs = ps.executeQuery();
+            ps.executeUpdate();
+            ResultSet rspkResultSet = ps.getGeneratedKeys();
             
-            int message_id = rs.getInt("message_id");
-            int posted_by = rs.getInt("posted_by");
-            String message_text = rs.getString("message_text");
-            long time_posted_epoch = rs.getLong("time_posted_epoch");
+            if (rspkResultSet.next() 
+                && message.getMessage_text()!="" 
+                && message.getMessage_text().length()<255){
 
-            newMessage = new Message(message_id, posted_by, message_text, time_posted_epoch);
+                int message_id = rspkResultSet.getInt("message_id");
+                newMessage = new Message(message_id, 
+                                    message.getPosted_by(), 
+                                    message.getMessage_text(), 
+                                    message.getTime_posted_epoch());
+                }
 
         }catch(SQLException e){
             e.printStackTrace();
@@ -64,7 +69,7 @@ public class MessageDAO {
             int message_id = rs.getInt("message_id");
             int posted_by = rs.getInt("posted_by");
             String message_text = rs.getString("message_text");
-            long time_posted_epoch = rs.getInt("time_posted_epoch");
+            long time_posted_epoch = rs.getLong("time_posted_epoch");
             
             message = new Message(message_id, posted_by, message_text, time_posted_epoch);
 
