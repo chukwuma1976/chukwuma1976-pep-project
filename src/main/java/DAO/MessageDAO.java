@@ -94,32 +94,22 @@ public class MessageDAO {
         } 
     }    
 
-    public Message updateMessageById(Message message, int id) {
+    public void updateMessageById(Message message, int id) {
         Connection conn = ConnectionUtil.getConnection();
-        Message updatedMessage = null;
         try {
             String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            int posted_by = message.getPosted_by();
-            String message_text = message.getMessage_text();
-            long time_posted_epoch = message.getTime_posted_epoch();
-
-            ps.setInt(1, posted_by);
-            ps.setString(2, message_text);
-            ps.setLong(3, time_posted_epoch);
+            ps.setInt(1, message.getPosted_by());
+            ps.setString(2, message.getMessage_text());
+            ps.setLong(3, message.getTime_posted_epoch());
             ps.setInt(4, id);
 
-            int updated = ps.executeUpdate();
-            
-            if (updated > 1 && message_text !="" && message_text.length() < 255){
-                updatedMessage = new Message(id, posted_by, message_text, time_posted_epoch);
-            }
+            ps.executeUpdate();
 
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return updatedMessage;
     }  
 
     public List<Message> getMessagesByAccountId(int account_id) {
