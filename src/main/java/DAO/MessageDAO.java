@@ -97,15 +97,14 @@ public class MessageDAO {
     public void updateMessageById(Message message, int id) {
         Connection conn = ConnectionUtil.getConnection();
         try {
-            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, message.getPosted_by());
-            ps.setString(2, message.getMessage_text());
-            ps.setLong(3, message.getTime_posted_epoch());
-            ps.setInt(4, id);
+            ps.setString(1, message.getMessage_text());
+            ps.setInt(2, id);
 
             ps.executeUpdate();
+
 
         }catch(SQLException e){
             e.printStackTrace();
