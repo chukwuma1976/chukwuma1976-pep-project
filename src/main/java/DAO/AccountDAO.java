@@ -44,10 +44,11 @@ public class AccountDAO {
             ResultSet rs = ps.executeQuery();
            
            
-            loggedUser = new Account(rs.getInt("account_id"), 
+            if (rs.next()){
+                loggedUser = new Account(rs.getInt("account_id"), 
                                     rs.getString("username"), 
                                     rs.getString("password"));
-            System.out.println("logged user"+loggedUser.toString());
+                }
 
         } catch (SQLException ex){
             ex.printStackTrace();

@@ -44,9 +44,9 @@ public class SocialMediaController {
         //message controllers routes
         app.get("/messages", this::getAllMessagesHandler);
         app.post("/messages", this::addMessageHandler);
-        app.get("/messages{message_id}", this::getMessageByIdHandler);
-        app.delete("/messages{message_id}", this::deleteMessageByIdHandler);
-        app.patch("/messages{message_id}", this::updateMessageByIdHandler);
+        app.get("/messages/{message_id}", this::getMessageByIdHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
+        app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
         app.get("/accounts/{account_id}/messages", this::getMessagesByAccountIdHandler);
 
         return app;
@@ -61,7 +61,7 @@ public class SocialMediaController {
         Account user = mapper.readValue(context.body(), Account.class);
         Account newUser = accountService.addUser(user);
         if(newUser!=null){
-            context.json(mapper.writeValueAsString(newUser));
+            context.json(newUser);
         }else{
             context.status(400);
         }
@@ -73,7 +73,7 @@ public class SocialMediaController {
         Account user = mapper.readValue(context.body(), Account.class);
         Account loginUser = accountService.loginUser(user);
         if(loginUser !=null){
-            context.status(200);
+            context.json(loginUser);
         }else{
             context.status(401);
         }
@@ -96,34 +96,40 @@ public class SocialMediaController {
     }
 
     private void getMessageByIdHandler(Context context) {
-        Integer id = Integer.parseInt(context.pathParam("message_id"));
+        int id = Integer.parseInt(context.pathParam("message_id"));
         Message message = messageService.getMessageById(id);
-        context.json(message);
+        if (message != null){
+            context.json(message);
+        } else {
+            context.json("");
+            context.status(200);
+        }
     }
 
     private void deleteMessageByIdHandler(Context context) {
-        Integer id = Integer.parseInt(context.pathParam("message_id"));
+        int id = Integer.parseInt(context.pathParam("message_id"));
         if (messageService.getMessageById(id)!=null){
+            context.json(messageService.getMessageById(id));
             messageService.deleteMessageById(id);
         } else {
-            context.result("Message not found");
+            context.json("");
         }
     }    
 
     private void updateMessageByIdHandler(Context context) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
-        Integer id = Integer.parseInt(context.pathParam("message_id"));
-        if (messageService.getMessageById(id)!=null){
-            messageService.updateMessageById(message, id);
-            context.json(messageService.getMessageById(id));
+        int id = Integer.parseInt(context.pathParam("message_id"));
+        Message updatedMessage = messageService.updateMessageById(message, id);
+        if (updatedMessage!=null){           
+            context.json(updatedMessage);
         } else {
             context.status(400);
         }
     }  
 
     private void getMessagesByAccountIdHandler(Context context) {
-        Long id = Long.parseLong(context.pathParam("message_id"));
+        int id = Integer.parseInt(context.pathParam("account_id"));
         List<Message> messages = messageService.getMessagesByAccountId(id);
         context.json(messages);
     }  

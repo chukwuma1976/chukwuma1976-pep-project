@@ -66,12 +66,14 @@ public class MessageDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             
-            int message_id = rs.getInt("message_id");
-            int posted_by = rs.getInt("posted_by");
-            String message_text = rs.getString("message_text");
-            long time_posted_epoch = rs.getLong("time_posted_epoch");
-            
-            message = new Message(message_id, posted_by, message_text, time_posted_epoch);
+            if (rs.next()){
+                int message_id = rs.getInt("message_id");
+                int posted_by = rs.getInt("posted_by");
+                String message_text = rs.getString("message_text");
+                long time_posted_epoch = rs.getLong("time_posted_epoch");
+                
+                message = new Message(message_id, posted_by, message_text, time_posted_epoch);
+            }
 
         }catch(SQLException e){
             e.printStackTrace();
@@ -96,20 +98,23 @@ public class MessageDAO {
         Connection conn = ConnectionUtil.getConnection();
         Message updatedMessage = null;
         try {
-            String sql = "UPDATE message SET posted_by=?, message_text=?, time_posted_epoch=? WHERE message_id = ?";
+            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? WHERE message_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, message.getPosted_by());
-            ps.setString(2, message.getMessage_text());
-            ps.setLong(3, message.getTime_posted_epoch());
-            ps.setInt(4, message.getPosted_by());
-            ResultSet rs = ps.executeQuery();
-            
-            int message_id = rs.getInt("message_id");
-            int posted_by = rs.getInt("posted_by");
-            String message_text = rs.getString("message_text");
-            long time_posted_epoch = rs.getInt("time_posted_epoch");
 
-            updatedMessage = new Message(message_id, posted_by, message_text, time_posted_epoch);
+            int posted_by = message.getPosted_by();
+            String message_text = message.getMessage_text();
+            long time_posted_epoch = message.getTime_posted_epoch();
+
+            ps.setInt(1, posted_by);
+            ps.setString(2, message_text);
+            ps.setLong(3, time_posted_epoch);
+            ps.setInt(4, id);
+
+            int updated = ps.executeUpdate();
+            
+            if (updated > 1 && message_text !="" && message_text.length() < 255){
+                updatedMessage = new Message(id, posted_by, message_text, time_posted_epoch);
+            }
 
         }catch(SQLException e){
             e.printStackTrace();
@@ -117,13 +122,13 @@ public class MessageDAO {
         return updatedMessage;
     }  
 
-    public List<Message> getMessagesByAccountId(Long account_id) {
+    public List<Message> getMessagesByAccountId(int account_id) {
         Connection conn = ConnectionUtil.getConnection();
         List<Message> messages = new ArrayList<>();
         try {
             String sql = "SELECT * FROM message WHERE posted_by = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setLong(1, account_id);
+            ps.setInt(1, account_id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 int message_id = rs.getInt("message_id");

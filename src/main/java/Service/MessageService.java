@@ -36,7 +36,7 @@ public class MessageService {
         } else return message;
     }  
 
-    public List<Message> getMessagesByAccountId(Long account_id) {
+    public List<Message> getMessagesByAccountId(int account_id) {
         return messageDAO.getMessagesByAccountId(account_id);
     }  
     
